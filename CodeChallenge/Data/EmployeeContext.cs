@@ -32,7 +32,9 @@ namespace CodeChallenge.Data
                 entity.HasKey(e => e.CompensationId);
                 
                 // This generally has no affect on an In Memory database but should be added to
-                // not violate referential integrity constraints in a real database scenario...
+                // not violate referential integrity constraints in a real database scenario.
+                // Adding a new compensation could benefit from this if an employee already has compensation.
+                // Currently the api checks this condition so theres no need for concern.
                 entity.HasIndex(u => u.EmployeeId).IsUnique();
             });
             

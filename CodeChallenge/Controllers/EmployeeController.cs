@@ -81,9 +81,6 @@ namespace CodeChallenge.Controllers
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
             // Start by validating the EmployeeId.
-            // A lot of validation logic here can be put in the EmployeeService, however we are then breaking pattern
-            // and the service now becomes a place that has multiple concerns (if it has not already).
-            // Keeping things simple for now, but might want to think about updating in the future.
             if (string.IsNullOrEmpty(compensation.EmployeeId))
             {
                 ModelState.AddModelError(nameof(Compensation.EmployeeId), "EmployeeId is required.");
@@ -92,7 +89,7 @@ namespace CodeChallenge.Controllers
             
             _logger.LogDebug($"Received compensation create request for employee '{compensation.EmployeeId}'");
 
-            // Check if this employee even exists.
+            // Check if this employee exists.
             var employeeExists = _employeeService.AnyEmployee(compensation.EmployeeId);
 
             if (employeeExists == false)
