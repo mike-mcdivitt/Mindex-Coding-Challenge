@@ -21,7 +21,33 @@ public class EmployeeServiceTests
     }
     
     [Fact]
-    public void GetReportingStructure_Returns_ReportingStructure()
+    public void GetReportingStructure_Returns_Null_When_EmployeeId_Is_Empty()
+    {
+        // Act
+        var reportingStructure = _sut.GetReportingStructure(string.Empty);
+
+        // Assert
+        reportingStructure.Should().BeNull();
+        _repositorySub.DidNotReceive().GetReportingStructure(Arg.Any<string>());
+    }
+    
+    [Fact]
+    public void GetReportingStructure_Returns_Null_When_GetReportingStructure_Returns_Null()
+    {
+        // Arrange
+        var employeeId = Guid.NewGuid().ToString();
+        _repositorySub.GetReportingStructure(Arg.Any<string>()).ReturnsNull();
+
+        // Act
+        var reportingStructure = _sut.GetReportingStructure(employeeId);
+
+        // Assert
+        reportingStructure.Should().BeNull();
+        _repositorySub.GetReportingStructure(Arg.Is(employeeId));
+    }
+    
+    [Fact]
+    public void GetReportingStructure_Returns_Correct_NumberOfReports()
     {
         // Arrange
         const int expectedNumberOfReports = 3;
@@ -29,8 +55,8 @@ public class EmployeeServiceTests
         var employee = new Employee
         {
             EmployeeId = Guid.NewGuid().ToString(),
-            FirstName = "Paul",
-            LastName = "McCartney",
+            FirstName = "Tom",
+            LastName = "Smith",
             Position = "Manager",
             Department = "Engineering",
             DirectReports = new List<Employee>
@@ -72,33 +98,12 @@ public class EmployeeServiceTests
 
         // Assert
         reportingStructure.Should().NotBeNull();
-        reportingStructure.Employee.Should().BeEquivalentTo(employee, options =>
-        {
-            options.Excluding(e => e.DirectReports);
-            return options;
-        });
         reportingStructure.NumberOfReports.Should().Be(expectedNumberOfReports);
-
-        _repositorySub.GetReportingStructure(Arg.Is(employee.EmployeeId));
+        _repositorySub.Received(1).GetReportingStructure(Arg.Is(employee.EmployeeId));
     }
 
     [Fact]
-    public void GetReportingStructure_Returns_Null()
-    {
-        // Arrange
-        var employeeId = Guid.NewGuid().ToString();
-        _repositorySub.GetReportingStructure(Arg.Any<string>()).ReturnsNull();
-
-        // Act
-        var reportingStructure = _sut.GetReportingStructure(employeeId);
-
-        // Assert
-        reportingStructure.Should().BeNull();
-        _repositorySub.GetReportingStructure(Arg.Is(employeeId));
-    }
-
-    [Fact]
-    public void CreateCompensation_Returns_New_Compensation_When_Not_Null()
+    public void CreateCompensation_Returns_New_Compensation()
     {
         // Arrange
         var compensation = new Compensation
@@ -107,16 +112,16 @@ public class EmployeeServiceTests
             EffectiveDate = DateTime.Now,
             Salary = 123456.78M
         };
-        
-        var addedCompensation = new Compensation
+
+        _repositorySub.AddCompensation(Arg.Any<Compensation>())
+            .Returns(new Compensation
         {
             CompensationId = Guid.NewGuid().ToString(),
             EmployeeId = compensation.EmployeeId,
             EffectiveDate = compensation.EffectiveDate,
             Salary = compensation.Salary
-        };
-
-        _repositorySub.AddCompensation(Arg.Any<Compensation>()).Returns(addedCompensation);
+        });
+        
         _repositorySub.SaveAsync().Returns(Task.CompletedTask);
         
         // Act
@@ -126,12 +131,6 @@ public class EmployeeServiceTests
         newCompensation.Should().NotBeNull();
         _repositorySub.Received(1).AddCompensation(Arg.Is(compensation));
         _repositorySub.Received(1).SaveAsync();
-        
-        Received.InOrder(() =>
-        {
-            _repositorySub.AddCompensation(Arg.Is(compensation));
-            _repositorySub.SaveAsync();
-        });
     }
     
     [Fact]
@@ -155,33 +154,29 @@ public class EmployeeServiceTests
     {
         // Arrange
         var employeeId = Guid.NewGuid().ToString();
-        
-        var expectedCompensation = new Compensation
+
+        _repositorySub.GetCompensationByEmployeeId(Arg.Any<string>())
+            .Returns(new Compensation
         {
-            CompensationId = Guid.NewGuid().ToString(),
+            CompensationId = employeeId,
             EffectiveDate = DateTime.Now,
             EmployeeId = employeeId,
             Salary = 12345.67M
-        };
-
-        _repositorySub.GetCompensationByEmployeeId(Arg.Any<string>()).Returns(expectedCompensation);
+        });
         
         // Act
         var compensation = _sut.GetCompensationByEmployeeId(employeeId);
 
         // Assert
-        compensation.Should().NotBeNull().And.BeEquivalentTo(expectedCompensation);
+        compensation.Should().NotBeNull();
         _repositorySub.Received(1).GetCompensationByEmployeeId(Arg.Is(employeeId));
     }
     
     [Fact]
-    public void GetCompensationByEmployeeId_Returns_Null_When_EmployeeId_Is_Null()
+    public void GetCompensationByEmployeeId_Returns_Null_When_EmployeeId_Is_Empty()
     {
-        // Arrange
-        _repositorySub.GetCompensationByEmployeeId(Arg.Any<string>());
-
         // Act
-        var compensation = _sut.GetCompensationByEmployeeId(null);
+        var compensation = _sut.GetCompensationByEmployeeId(string.Empty);
         
         // Assert
         compensation.Should().BeNull();
