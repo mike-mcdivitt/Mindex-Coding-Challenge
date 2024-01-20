@@ -13,6 +13,8 @@ namespace CodeChallenge.Services
         Employee Update(Employee newEmployee);
         ReportingStructure GetReportingStructure(string employeeId);
         Compensation CreateCompensation(Compensation compensation);
-        Compensation GetCompensationByEmployeeId(String employeeId);
+        Compensation GetCompensationByEmployeeId(string employeeId);
+        bool AnyEmployee(string id);
+        bool AnyCompensation(string id);
     }
 }

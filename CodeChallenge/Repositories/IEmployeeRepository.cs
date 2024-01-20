@@ -8,12 +8,14 @@ namespace CodeChallenge.Repositories
     public interface IEmployeeRepository
     {
         Employee GetById(String id);
-        Employee GetReportingStructure(string id);
         Employee Add(Employee employee);
         Employee Remove(Employee employee);
+        Task SaveAsync();
         Employee Update(Employee employee);
+        bool AnyEmployee(string id);
+        Employee GetReportingStructure(string id);
         Compensation GetCompensationByEmployeeId(string employeeId);
         Compensation AddCompensation(Compensation compensation);
-        Task SaveAsync();
+        bool AnyCompensation(string employeeId);
     }
 }

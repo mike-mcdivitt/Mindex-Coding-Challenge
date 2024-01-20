@@ -85,17 +85,17 @@ namespace CodeChallenge.Controllers
             _logger.LogDebug($"Received compensation create request for employee '{compensation.EmployeeId}'");
 
             // Check if this employee even exists.
-            var existingEmployee = _employeeService.GetById(compensation.EmployeeId);
+            var employeeExists = _employeeService.AnyEmployee(compensation.EmployeeId);
 
-            if (existingEmployee == null)
+            if (employeeExists == false)
             {
                 return BadRequest($"Employee '{compensation.EmployeeId}' does not exist.");
             }
 
             // Now that we know the EmployeeId is "valid", check if this employee already has compensation.
-            var existingCompensation = _employeeService.GetCompensationByEmployeeId(compensation.EmployeeId);
+            var compensationExists = _employeeService.AnyCompensation(compensation.EmployeeId);
             
-            if (existingCompensation != null)
+            if (compensationExists)
             {
                 return BadRequest($"Compensation for employee '{compensation.EmployeeId}' already exists.");
             }

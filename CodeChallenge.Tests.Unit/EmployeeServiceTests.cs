@@ -10,14 +10,13 @@ namespace CodeChallenge.Tests.Unit;
 public class EmployeeServiceTests
 {
     private readonly IEmployeeRepository _repositorySub;
-    private readonly ILogger<EmployeeService> _loggerSub;
     private readonly EmployeeService _sut;
 
     public EmployeeServiceTests()
     {
-        _loggerSub = Substitute.For<ILogger<EmployeeService>>();
+        var loggerSub = Substitute.For<ILogger<EmployeeService>>();
         _repositorySub = Substitute.For<IEmployeeRepository>();
-        _sut = new EmployeeService(_loggerSub, _repositorySub);
+        _sut = new EmployeeService(loggerSub, _repositorySub);
     }
     
     [Fact]

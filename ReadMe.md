@@ -54,6 +54,41 @@ The Employee has a JSON schema of:
   }
 }
 ```
+```
+** NEW **
+
+* READ REPORTING STRUCTURE
+    * HTTP Method: GET 
+    * URL: localhost:8080/api/employee/{id}/reporting-structure
+    * RESPONSE: ReportingStructure
+* READ COMPENSATION
+    * HTTP Method: GET 
+    * URL: localhost:8080/api/employee/{id}/compensation
+    * RESPONSE: CompENSATION
+* CREATE COMPENSATION
+    * HTTP Method: POST 
+    * URL: localhost:8080/api/employee/compensation
+    * PAYLOAD: Compensation
+    * RESPONSE: Compensation
+```
+The Compensation has a JSON schema of:
+```json
+{
+  "type":"Compensation",
+  "properties": {
+    "employeeId": {
+      "type": "string"
+    },
+    "effectiveDate": {
+      "type": "date"
+    },
+    "salary": {
+          "type": "decimal"
+    }
+  }
+}
+```
+
 For all endpoints that require an "id" in the URL, this is the "employeeId" field.
 
 ## What to Implement

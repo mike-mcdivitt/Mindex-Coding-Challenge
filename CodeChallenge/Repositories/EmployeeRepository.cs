@@ -66,6 +66,16 @@ namespace CodeChallenge.Repositories
         }
         
         /// <summary>
+        /// Checks if an employee exists.
+        /// </summary>
+        /// <param name="id">The EmployeeId.</param>
+        /// <returns>True if the employee exists. False if the employee does not.</returns>
+        public bool AnyEmployee(string id)
+        {
+            return _employeeContext.Employees.AsNoTracking().Any(e => e.EmployeeId == id);
+        }
+        
+        /// <summary>
         /// Returns a single employee including their direct and indirect reports.
         /// </summary>
         /// <remarks>This is a readonly query and uses AsNoTracking to disable change tracking while
@@ -103,6 +113,16 @@ namespace CodeChallenge.Repositories
             compensation.CompensationId = Guid.NewGuid().ToString();
             _employeeContext.Compensations.Add(compensation);
             return compensation;
+        }
+
+        /// <summary>
+        /// Checks if an existing employee compensation exists.
+        /// </summary>
+        /// <param name="employeeId">The EmployeeId.</param>
+        /// <returns>True if the employee compensation exists. False if it does not.</returns>
+        public bool AnyCompensation(string employeeId)
+        {
+            return _employeeContext.Compensations.AsNoTracking().Any(e => e.EmployeeId == employeeId);
         }
     }
 }
