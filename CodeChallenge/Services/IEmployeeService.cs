@@ -1,6 +1,6 @@
 ﻿using CodeChallenge.Models;
 using System;
-using CodeChallenge.Models.Dtos;
+using CodeChallenge.Models.Contracts;
 using CodeChallenge.Models.Entities;
 
 namespace CodeChallenge.Services
@@ -11,7 +11,7 @@ namespace CodeChallenge.Services
         Employee Create(Employee employee);
         Employee Replace(Employee originalEmployee, Employee newEmployee);
         Employee Update(Employee newEmployee);
-        ReportingStructure GetReportingStructure(string employeeId);
+        ReportingStructureContract GetReportingStructure(string employeeId);
         Compensation CreateCompensation(Compensation compensation);
         Compensation GetCompensationByEmployeeId(string employeeId);
         bool AnyEmployee(string id);

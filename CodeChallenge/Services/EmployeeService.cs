@@ -1,6 +1,6 @@
 ﻿using System;
 using CodeChallenge.Models;
-using CodeChallenge.Models.Dtos;
+using CodeChallenge.Models.Contracts;
 using CodeChallenge.Models.Entities;
 using Microsoft.Extensions.Logging;
 using CodeChallenge.Repositories;
@@ -80,7 +80,7 @@ namespace CodeChallenge.Services
         /// </summary>
         /// <param name="employeeId">The EmployeeId.</param>
         /// <returns>The employee reporting structure.</returns>
-        public ReportingStructure GetReportingStructure(string employeeId)
+        public ReportingStructureContract GetReportingStructure(string employeeId)
         {
             if (string.IsNullOrEmpty(employeeId)) return null;
             
@@ -92,7 +92,7 @@ namespace CodeChallenge.Services
 
             var numberOfReports = CalculateNumberOfReports(employee);
             
-            return new ReportingStructure
+            return new ReportingStructureContract
             {
                 Employee = employee,
                 NumberOfReports = numberOfReports

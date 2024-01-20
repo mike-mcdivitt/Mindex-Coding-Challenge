@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeChallenge.Models.Entities;
 
-namespace CodeChallenge.Models
+namespace CodeChallenge.Models.Entities
 {
     public class Employee
     {

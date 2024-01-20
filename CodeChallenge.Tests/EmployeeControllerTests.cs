@@ -3,11 +3,11 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using CodeChallenge.Models;
-using CodeChallenge.Models.Dtos;
+using CodeChallenge.Models.Contracts;
 using CodeChallenge.Models.Entities;
 using CodeCodeChallenge.Tests.Integration.Extensions;
 using CodeCodeChallenge.Tests.Integration.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CodeCodeChallenge.Tests.Integration
@@ -146,7 +146,7 @@ namespace CodeCodeChallenge.Tests.Integration
         
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var reportingStructure = response.DeserializeContent<ReportingStructure>();
+            var reportingStructure = response.DeserializeContent<ReportingStructureContract>();
             Assert.IsNotNull(reportingStructure);
             Assert.AreEqual(employeeId, reportingStructure.Employee.EmployeeId);
             Assert.AreEqual(expectedNumberOfReports, reportingStructure.NumberOfReports);
@@ -174,7 +174,7 @@ namespace CodeCodeChallenge.Tests.Integration
             {
                 EmployeeId = "62c1084e-6e34-4630-93fd-9153afb65309",
                 Salary = 123456.78M,
-                EffectiveDate = DateTime.Now
+                EffectiveDate = new DateTime(2024, 1, 1)
             };
         
             var requestContent = new JsonSerialization().ToJson(compensation);
@@ -192,7 +192,7 @@ namespace CodeCodeChallenge.Tests.Integration
             Assert.IsNotNull(newCompensation.CompensationId);
             Assert.AreEqual(compensation.EmployeeId, newCompensation.EmployeeId);
             Assert.AreEqual(compensation.Salary, newCompensation.Salary);
-            Assert.AreEqual(compensation.EffectiveDate.Date, newCompensation.EffectiveDate.Date);
+            Assert.AreEqual(compensation.EffectiveDate, newCompensation.EffectiveDate);
         }
         
         [TestMethod]
@@ -202,9 +202,11 @@ namespace CodeCodeChallenge.Tests.Integration
             var compensation = new Compensation
             {
                 EmployeeId = string.Empty,
-                Salary = 123456.78M,
+                Salary = 123456.78m,
                 EffectiveDate = DateTime.Now
             };
+
+            const string expectedErrorMessage = "EmployeeId is required.";
         
             var requestContent = new JsonSerialization().ToJson(compensation);
         
@@ -215,8 +217,36 @@ namespace CodeCodeChallenge.Tests.Integration
         
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            var error = response.Content.ReadAsStringAsync().Result;
-            Assert.AreEqual("EmployeeId is required.", error);
+            var validationProblemDetails = response.DeserializeContent<ValidationProblemDetails>();
+            Assert.IsNotNull(validationProblemDetails);
+            Assert.That.SingleValidationProblemDetailsErrorIsValid(validationProblemDetails, nameof(Compensation.EmployeeId), expectedErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateCompensation_Returns_BadRequest_When_Employee_Does_Not_Exist()
+        {
+            // Arrange
+            var compensation = new Compensation
+            {
+                EmployeeId = Guid.NewGuid().ToString(),
+                Salary = 123456.78m,
+                EffectiveDate = DateTime.Now
+            };
+
+            var expectedErrorMessage = $"Employee '{compensation.EmployeeId}' does not exist.";
+        
+            var requestContent = new JsonSerialization().ToJson(compensation);
+        
+            // Act
+            var postRequestTask = _httpClient.PostAsync("api/employee/compensation",
+                new StringContent(requestContent, Encoding.UTF8, "application/json"));
+            var response = postRequestTask.Result;
+        
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            var validationProblemDetails = response.DeserializeContent<ValidationProblemDetails>();
+            Assert.IsNotNull(validationProblemDetails);
+            Assert.That.SingleValidationProblemDetailsErrorIsValid(validationProblemDetails, nameof(Compensation.EmployeeId), expectedErrorMessage);
         }
         
         [TestMethod]
@@ -226,9 +256,12 @@ namespace CodeCodeChallenge.Tests.Integration
             var compensation = new Compensation
             {
                 EmployeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f",
-                Salary = 123456.78M,
+                Salary = 123456.78m,
                 EffectiveDate = DateTime.Now
             };
+
+            var expectedErrorMessage =
+                $"Compensation for employee '{compensation.EmployeeId}' already exists.";
         
             var requestContent = new JsonSerialization().ToJson(compensation);
         
@@ -239,8 +272,9 @@ namespace CodeCodeChallenge.Tests.Integration
         
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            var error = response.Content.ReadAsStringAsync().Result;
-            Assert.AreEqual($"Compensation for employee '{compensation.EmployeeId}' already exists.", error);
+            var validationProblemDetails = response.DeserializeContent<ValidationProblemDetails>();
+            Assert.IsNotNull(validationProblemDetails);
+            Assert.That.SingleValidationProblemDetailsErrorIsValid(validationProblemDetails, nameof(Compensation.EmployeeId), expectedErrorMessage);
         }
         
         [TestMethod]

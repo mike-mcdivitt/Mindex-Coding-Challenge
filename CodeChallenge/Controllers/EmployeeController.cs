@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CodeChallenge.Services;
-using CodeChallenge.Models;
 using CodeChallenge.Models.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace CodeChallenge.Controllers
 {
@@ -61,6 +61,8 @@ namespace CodeChallenge.Controllers
         }
         
         [HttpGet("{id}/reporting-structure", Name = "getEmployeeReportingStructure")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetEmployeeReportingStructure(String id)
         {
             _logger.LogDebug($"Received employee reporting structure get request for '{id}'");
@@ -74,12 +76,18 @@ namespace CodeChallenge.Controllers
         }
         
         [HttpPost("compensation", Name = "createCompensation")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
-            // Check if EmployeeId is included in the compensation.
+            // Start by validating the EmployeeId.
+            // A lot of validation logic here can be put in the EmployeeService, however we are then breaking pattern
+            // and the service now becomes a place that has multiple concerns (if it has not already).
+            // Keeping things simple for now, but might want to think about updating in the future.
             if (string.IsNullOrEmpty(compensation.EmployeeId))
             {
-                return BadRequest("EmployeeId is required.");
+                ModelState.AddModelError(nameof(Compensation.EmployeeId), "EmployeeId is required.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
             
             _logger.LogDebug($"Received compensation create request for employee '{compensation.EmployeeId}'");
@@ -89,7 +97,9 @@ namespace CodeChallenge.Controllers
 
             if (employeeExists == false)
             {
-                return BadRequest($"Employee '{compensation.EmployeeId}' does not exist.");
+                ModelState.AddModelError(nameof(Compensation.EmployeeId),
+                    $"Employee '{compensation.EmployeeId}' does not exist.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
             // Now that we know the EmployeeId is "valid", check if this employee already has compensation.
@@ -97,15 +107,19 @@ namespace CodeChallenge.Controllers
             
             if (compensationExists)
             {
-                return BadRequest($"Compensation for employee '{compensation.EmployeeId}' already exists.");
+                ModelState.AddModelError(nameof(Compensation.EmployeeId),
+                    $"Compensation for employee '{compensation.EmployeeId}' already exists.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
     
             _employeeService.CreateCompensation(compensation);
-    
+           
             return CreatedAtRoute("createCompensation", new { id = compensation.CompensationId }, compensation);
         }
     
         [HttpGet("{id}/compensation", Name = "getCompensationByEmployeeId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetCompensationByEmployeeId(string id)
         {
             _logger.LogDebug($"Received compensation get request for employee '{id}'");

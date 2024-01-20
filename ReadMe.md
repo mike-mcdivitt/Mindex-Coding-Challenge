@@ -60,11 +60,11 @@ The Employee has a JSON schema of:
 * READ REPORTING STRUCTURE
     * HTTP Method: GET 
     * URL: localhost:8080/api/employee/{id}/reporting-structure
-    * RESPONSE: ReportingStructure
+    * RESPONSE: ReportingStructureContract
 * READ COMPENSATION
     * HTTP Method: GET 
     * URL: localhost:8080/api/employee/{id}/compensation
-    * RESPONSE: CompENSATION
+    * RESPONSE: Compensation
 * CREATE COMPENSATION
     * HTTP Method: POST 
     * URL: localhost:8080/api/employee/compensation
@@ -80,10 +80,11 @@ The Compensation has a JSON schema of:
       "type": "string"
     },
     "effectiveDate": {
-      "type": "date"
+      "type": "date",
+      "format": "yyyy/MM/dd"
     },
     "salary": {
-          "type": "decimal"
+      "type": "decimal"
     }
   }
 }

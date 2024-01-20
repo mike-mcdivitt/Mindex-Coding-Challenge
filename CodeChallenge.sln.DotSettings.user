@@ -1,10 +1,10 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/DKS0330487/Library/Caches/JetBrains/Rider2023.3/resharper-host/temp/Rider/vAny/CoverageData/_CodeChallenge.-122254790/Snapshot/snapshot.utdcvr</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=53462de4_002De9f5_002D44ab_002D9657_002Daedf99818499/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="EmployeeServiceTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::7D0422C9-E6D0-435E-B27B-C1F428E37C30::net6.0::CodeChallenge.Tests.Unit.EmployeeServiceTests&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
-&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
 	
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=98240817_002D7005_002D43db_002D8686_002D5b715588f5ec/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="EmployeeServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
@@ -24,9 +24,12 @@
 	
 	
 	
+	
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e3b07802_002D1325_002D4ddb_002D8e26_002Dae5330ec6e45/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateCompensation_Returns_BadRequest_When_EmployeeId_Is_Empty" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;MSTest::0EFCF139-7A42-4E38-B638-856076B0108A::net6.0::CodeCodeChallenge.Tests.Integration.EmployeeControllerTests.CreateCompensation_Returns_BadRequest_When_EmployeeId_Is_Empty&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
+	
 	</wpf:ResourceDictionary>

@@ -1,10 +1,12 @@
-namespace CodeChallenge.Models.Dtos;
+using CodeChallenge.Models.Entities;
+
+namespace CodeChallenge.Models.Contracts;
 
 /// <summary>
-/// Holds the employees reporting structure which includes the Employee information
+/// Api contract that holds the employees reporting structure which includes the Employee information
 /// and the total number of direct and indirect reports.
 /// </summary>
-public class ReportingStructure
+public class ReportingStructureContract
 {
     /// <summary>
     /// The Employee for whom the reporting structure is being retrieved for.
