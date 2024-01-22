@@ -1,5 +1,4 @@
-﻿using CodeChallenge.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using CodeChallenge.Models.Entities;
 
 namespace CodeChallenge.Data

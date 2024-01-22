@@ -1,5 +1,4 @@
 ﻿using System;
-using CodeChallenge.Models;
 using CodeChallenge.Models.Contracts;
 using CodeChallenge.Models.Entities;
 using Microsoft.Extensions.Logging;
@@ -76,6 +75,16 @@ namespace CodeChallenge.Services
         }
         
         /// <summary>
+        /// Checks if an employee exists in the system.
+        /// </summary>
+        /// <param name="id">The EmployeeId.</param>
+        /// <returns>True if the employee exists. False if the employee does not.</returns>
+        public bool EmployeeExists(string id)
+        {
+            return _employeeRepository.EmployeeExists(id);
+        }
+        
+        /// <summary>
         /// Retrieves the employee reporting structure which includes direct and indirect reports.
         /// </summary>
         /// <param name="employeeId">The EmployeeId.</param>
@@ -99,6 +108,10 @@ namespace CodeChallenge.Services
             };
         }
         
+        // I would argue Compensation should live under the Employee Aggregate instead of having its own Controller/Service..
+        // ..at least until the project grows and more business rules are presented.
+        #region Compensation
+        
         /// <summary>
         /// Creates a new employee compensation.
         /// </summary>
@@ -118,7 +131,7 @@ namespace CodeChallenge.Services
         }
 
         /// <summary>
-        /// Retrieves a single employees compensation.
+        /// Retrieves the compensation of a single employee.
         /// </summary>
         /// <param name="employeeId">The EmployeeId</param>
         /// <returns>The employees compensation.</returns>
@@ -130,26 +143,20 @@ namespace CodeChallenge.Services
 
             return _employeeRepository.GetCompensationByEmployeeId(employeeId);
         }
-
-        /// <summary>
-        /// Checks if an employee exists in the system.
-        /// </summary>
-        /// <param name="id">The EmployeeId.</param>
-        /// <returns>True if the employee exists. False if the employee does not.</returns>
-        public bool AnyEmployee(string id)
-        {
-            return _employeeRepository.AnyEmployee(id);
-        }
         
         /// <summary>
         /// Checks if an employee already has a compensation.
         /// </summary>
         /// <param name="employeeId">The EmployeeId.</param>
         /// <returns>True if the employee compensation already exists. False if it does not.</returns>
-        public bool AnyCompensation(string employeeId)
+        public bool CompensationExists(string employeeId)
         {
-            return _employeeRepository.AnyCompensation(employeeId);
+            return _employeeRepository.CompensationExists(employeeId);
         }
+        
+        #endregion
+        
+        #region Private Methods
         
         /// <summary>
         /// Recursively calculates the total number of direct and indirect reports for an employee.
@@ -180,5 +187,7 @@ namespace CodeChallenge.Services
             // Return the sum of direct and indirect reports
             return directReportsCount + indirectReportsCount;
         }
+        
+        #endregion
     }
 }

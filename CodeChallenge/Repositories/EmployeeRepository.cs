@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CodeChallenge.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using CodeChallenge.Data;
@@ -70,7 +69,7 @@ namespace CodeChallenge.Repositories
         /// </summary>
         /// <param name="id">The EmployeeId.</param>
         /// <returns>True if the employee exists. False if the employee does not.</returns>
-        public bool AnyEmployee(string id)
+        public bool EmployeeExists(string id)
         {
             return _employeeContext.Employees.AsNoTracking().Any(e => e.EmployeeId == id);
         }
@@ -121,7 +120,7 @@ namespace CodeChallenge.Repositories
         /// <remarks>This is a readonly query and uses AsNoTracking to disable change tracking.</remarks>
         /// <param name="employeeId">The EmployeeId.</param>
         /// <returns>True if the employee compensation exists. False if it does not.</returns>
-        public bool AnyCompensation(string employeeId)
+        public bool CompensationExists(string employeeId)
         {
             return _employeeContext.Compensations.AsNoTracking().Any(e => e.EmployeeId == employeeId);
         }

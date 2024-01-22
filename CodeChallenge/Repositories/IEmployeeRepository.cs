@@ -1,5 +1,4 @@
-﻿using CodeChallenge.Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using CodeChallenge.Models.Entities;
 
@@ -12,10 +11,10 @@ namespace CodeChallenge.Repositories
         Employee Remove(Employee employee);
         Task SaveAsync();
         Employee Update(Employee employee);
-        bool AnyEmployee(string id);
+        bool EmployeeExists(string id);
         Employee GetReportingStructure(string id);
         Compensation GetCompensationByEmployeeId(string employeeId);
         Compensation AddCompensation(Compensation compensation);
-        bool AnyCompensation(string employeeId);
+        bool CompensationExists(string employeeId);
     }
 }

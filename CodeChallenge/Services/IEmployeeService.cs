@@ -1,5 +1,4 @@
-﻿using CodeChallenge.Models;
-using System;
+﻿using System;
 using CodeChallenge.Models.Contracts;
 using CodeChallenge.Models.Entities;
 
@@ -14,7 +13,7 @@ namespace CodeChallenge.Services
         ReportingStructureContract GetReportingStructure(string employeeId);
         Compensation CreateCompensation(Compensation compensation);
         Compensation GetCompensationByEmployeeId(string employeeId);
-        bool AnyEmployee(string id);
-        bool AnyCompensation(string id);
+        bool EmployeeExists(string id);
+        bool CompensationExists(string id);
     }
 }
