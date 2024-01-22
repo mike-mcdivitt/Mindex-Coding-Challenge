@@ -118,6 +118,7 @@ namespace CodeChallenge.Repositories
         /// <summary>
         /// Checks if an existing employee compensation exists.
         /// </summary>
+        /// <remarks>This is a readonly query and uses AsNoTracking to disable change tracking.</remarks>
         /// <param name="employeeId">The EmployeeId.</param>
         /// <returns>True if the employee compensation exists. False if it does not.</returns>
         public bool AnyCompensation(string employeeId)
